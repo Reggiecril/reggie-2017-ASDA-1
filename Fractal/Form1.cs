@@ -12,7 +12,7 @@ namespace Fractal
 {
     public partial class Fractal : Form
     {
-        Bitmap bitmap;
+        Bitmap bitmap= new Bitmap(640,580);
         Graphics g1;
         PictureBox pictureBox1 = new PictureBox();
         public struct HSBColor
@@ -144,18 +144,24 @@ namespace Fractal
         private Cursor c1, c2;
 
 
+        public Fractal()
+        {
+            InitializeComponent();
+            init();
 
+            
+        }
         public void init()
         {
             //HSBcol = new HSB();
             finished = false;
             c1 = Cursors.WaitCursor;
             c2 = Cursors.Cross;
-            x1 = this.Width;
-            y1 = this.Height;
+            x1 = this.Width-16;
+            y1 = this.Height-40;
+            bitmap = new Bitmap(x1,y1);
             xy = (float)x1 / (float)y1;
-            bitmap = new Bitmap(x1, y1);
-            g1 = Graphics.FromImage(bitmap);
+            
             finished = true;
 
             // xy = (float)x1 / (float)y1;
@@ -202,7 +208,6 @@ namespace Fractal
 
         public void update(Graphics g)
         {
-            g = Graphics.FromImage(bitmap);
             if (rectangle)
             {
 
@@ -233,43 +238,48 @@ namespace Fractal
                     h = pointcolour(xstart + xzoom * (double)x, ystart + yzoom * (double)y);
                     // color value
                     Color color = new Color();
-
-                    if (h != alt)
+                    using (g1 = Graphics.FromImage(bitmap))
                     {
-                        b = 1.0f - h * h; // brightnes
+                        if (h != alt)
+                        {
+                            b = 1.0f - h * h; // brightnes
 
-                        ///djm added
+                            ///djm added
 
-                        ///HSBcol.fromHSB(h,0.8f,b); 
-                        ///
-                        //convert hsb to rgb then make a Java Color
+                            ///HSBcol.fromHSB(h,0.8f,b); 
+                            ///
+                            //convert hsb to rgb then make a Java Color
 
-                        color = HSBColor.FromHSB(new HSBColor(h * 255, 0.8f * 255, b * 255));
+                            color = HSBColor.FromHSB(new HSBColor(h * 255, 0.8f * 255, b * 255));
 
-                        ///g1.setColor(col);
-                        //djm end
-                        //djm added to convert to RGB from HSB
+                            ///g1.setColor(col);
+                            //djm end
+                            //djm added to convert to RGB from HSB
 
-                        //g1.setColor(Color.getHSBColor(h, 0.8f, b));
-                        //djm test
+                            //g1.setColor(Color.getHSBColor(h, 0.8f, b));
+                            //djm test
 
-                        //  Color col = Color.FromArgb(0, 0, 0, 0);
+                            //  Color col = Color.FromArgb(0, 0, 0, 0);
 
-                        //red = Color.Red;
-                        // green = Color.Green;
-                        // blue = Color.Blue;
+                            //red = Color.Red;
+                            // green = Color.Green;
+                            // blue = Color.Blue;
 
-                        //djm 
-                        alt = h;
-                        Pen p = new Pen(color);
-                        g1.DrawLine(p, x, y, x + 1, y);
-                    }
-                    else
-                    {
-                        b = 1.0f - h * h; // brightnes
-                        color = HSBColor.FromHSB(new HSBColor(h * 255, 0.8f * 255, b * 255));
-                        Pen p = new Pen(color);
-                        g1.DrawLine(p, x, y, x + 1, y);
+                            //djm 
+                            alt = h;
+                            Pen p = new Pen(color);
+                            g1.DrawLine(p, x, y, x + 1, y);
+
+
+                        }
+                        else
+                        {
+                            b = 1.0f - h * h; // brightnes
+                            color = HSBColor.FromHSB(new HSBColor(h * 255, 0.8f * 255, b * 255));
+                            Pen p = new Pen(color);
+                            g1.DrawLine(p, x, y, x + 1, y);
+
+                        }
                     }
 
 
@@ -303,28 +313,22 @@ namespace Fractal
             if ((float)((xende - xstart) / (yende - ystart)) != xy)
                 xstart = xende - (yende - ystart) * (double)xy;
         }
-        public Fractal()
-        {
-            InitializeComponent();
-
-
-
-            init();
-        }
+        
         private void Fractal_Paint(object sender, PaintEventArgs e)
         {
 
 
             Graphics g = e.Graphics;
-
             g1 = g;
-
+            start();
+            
+            g.DrawImageUnscaled(bitmap, 0, 0);
 
             //picture = g.DrawImage;
 
             //g.DrawImage(picture,0,0);
-            update(g1);
-            start();
+
+
         }
 
 
