@@ -34,9 +34,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(278, 244);
+            this.ClientSize = new System.Drawing.Size(618, 424);
             this.Name = "Fractal";
-            this.Text = "Form1";
+            this.Text = "Fractal";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Fractal_Paint);
             this.ResumeLayout(false);
 
