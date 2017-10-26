@@ -210,13 +210,13 @@ namespace Fractal
 
                     if (xs < xe)
                     {
-                        Pen p = new Pen(Color.White);
+                        Pen p = new Pen(Color.Aqua);
                         if (ys < ye) g.DrawRectangle(p, xs, ys, (xe - xs), (ye - ys));
                         else g.DrawRectangle(p, xs, ye, (xe - xs), (ys - ye));
                     }
                     else
                     {
-                        Pen p = new Pen(Color.White);
+                        Pen p = new Pen(Color.Aqua);
                         if (ys < ye) g.DrawRectangle(p, xe, ys, (xs - xe), (ye - ys));
                         else g.DrawRectangle(p, xe, ye, (xs - xe), (ys - ye));
                     }
