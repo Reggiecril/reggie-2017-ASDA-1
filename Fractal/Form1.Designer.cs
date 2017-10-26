@@ -38,6 +38,12 @@
             this.Name = "Fractal";
             this.Text = "Fractal";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Fractal_Paint);
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Fractal_MouseClick);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Fractal_MouseDown);
+            this.MouseEnter += new System.EventHandler(this.Fractal_MouseEnter);
+            this.MouseLeave += new System.EventHandler(this.Fractal_MouseLeave);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Fractal_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Fractal_MouseUp);
             this.ResumeLayout(false);
 
         }

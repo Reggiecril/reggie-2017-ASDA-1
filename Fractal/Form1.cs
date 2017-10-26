@@ -12,7 +12,7 @@ namespace Fractal
 {
     public partial class Fractal : Form
     {
-        Bitmap bitmap = new Bitmap(640, 580);
+        Bitmap bitmap = new Bitmap(640, 480);
         Graphics g1;
         PictureBox pictureBox1 = new PictureBox();
         public struct HSBColor
@@ -133,16 +133,13 @@ namespace Fractal
         private double EY = 1.125;  // end value imaginary
         private static int x1, y1, xs, ys, xe, ye;
         private static double xstart, ystart, xende, yende, xzoom, yzoom;
-        private static bool action, rectangle, finished;
-
-
-
+        private static bool action, rectangle, finished,press,test;
+        private Cursor c1, c2;
         private static float xy;
 
+        
 
-
-        private Cursor c1, c2;
-
+        
 
         public Fractal()
         {
@@ -164,9 +161,6 @@ namespace Fractal
 
             finished = true;
 
-            // xy = (float)x1 / (float)y1;
-            //picture = createImage(x1, y1); 
-            //g1 = picture.getGraphics();
         }
 
         public void destroy() // delete all instances 
@@ -208,20 +202,24 @@ namespace Fractal
 
         public void update(Graphics g)
         {
-            if (rectangle)
+            if (test)
             {
+                g.DrawImage(bitmap, 0, 0);
+                if (rectangle)
+                {
 
-                if (xs < xe)
-                {
-                    Pen p = new Pen(Color.White);
-                    if (ys < ye) g.DrawRectangle(p, xs, ys, (xe - xs), (ye - ys));
-                    else g.DrawRectangle(p, xs, ye, (xe - xs), (ys - ye));
-                }
-                else
-                {
-                    Pen p = new Pen(Color.White);
-                    if (ys < ye) g.DrawRectangle(p, xe, ys, (xs - xe), (ye - ys));
-                    else g.DrawRectangle(p, xe, ye, (xs - xe), (ys - ye));
+                    if (xs < xe)
+                    {
+                        Pen p = new Pen(Color.White);
+                        if (ys < ye) g.DrawRectangle(p, xs, ys, (xe - xs), (ye - ys));
+                        else g.DrawRectangle(p, xs, ye, (xe - xs), (ys - ye));
+                    }
+                    else
+                    {
+                        Pen p = new Pen(Color.White);
+                        if (ys < ye) g.DrawRectangle(p, xe, ys, (xs - xe), (ye - ys));
+                        else g.DrawRectangle(p, xe, ye, (xs - xe), (ys - ye));
+                    }
                 }
             }
         }
@@ -229,7 +227,7 @@ namespace Fractal
         {
             int x, y;
             float h, b, alt = 0.0f;
-
+            test = true;
             action = false;
             this.Cursor = c1;
             for (x = 0; x < x1; x += 2)
@@ -320,14 +318,114 @@ namespace Fractal
 
             Graphics g = e.Graphics;
             g1 = g;
-            start();
-
+            if (test)
+            {
+                update(g1);
+            }
+            else
+            {
+                start();
+            }
+            
             g.DrawImageUnscaled(bitmap, 0, 0);
 
-            //picture = g.DrawImage;
 
-            //g.DrawImage(picture,0,0);
 
+
+        }
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+        }
+
+
+
+        private void Fractal_MouseDown(object sender, MouseEventArgs e)
+        {
+            Dispose();
+
+            if (action)
+            {
+                press = true;
+                xs = e.X;
+                ys = e.Y;
+            }
+            else
+            {
+                press = false;
+            }
+        }
+
+
+
+        private void Fractal_MouseUp(object sender, MouseEventArgs e)
+        {
+            int z, w;
+            Dispose();
+            if (action)
+            {
+                xe = e.X;
+                ye = e.Y;
+                if (xs > xe)
+                {
+                    z = xs;
+                    xs = xe;
+                    xe = z;
+                }
+                if (ys > ye)
+                {
+                    z = ys;
+                    ys = ye;
+                    ye = z;
+                }
+                w = (xe - xs);
+                z = (ye - ys);
+                if ((w < 2) && (z < 2)) initvalues();
+                else
+                {
+                    if (((float)w > (float)z * xy)) ye = (int)((float)ys + (float)w / xy);
+                    else xe = (int)((float)xs + (float)z * xy);
+                    xende = xstart + xzoom * (double)xe;
+                    yende = ystart + yzoom * (double)ye;
+                    xstart += xzoom * (double)xs;
+                    ystart += yzoom * (double)ys;
+                }
+                xzoom = (xende - xstart) / (double)x1;
+                yzoom = (yende - ystart) / (double)y1;
+                mandelbrot();
+                rectangle = false;
+                test = true;
+                Invalidate();
+            }
+        }
+
+        private void Fractal_MouseEnter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Fractal_MouseLeave(object sender, EventArgs e)
+        {
+
+        }
+        private void Fractal_MouseClick(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void Fractal_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (press)
+            {
+                if (action)
+                {
+                    xe = e.X;
+                    ye = e.Y;
+                    rectangle = true;
+                    Invalidate();
+                }
+                press = false;
+            }
 
         }
 
