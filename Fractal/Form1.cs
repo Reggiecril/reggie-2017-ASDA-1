@@ -133,7 +133,7 @@ namespace Fractal
         private double EY = 1.125;  // end value imaginary
         private static int x1, y1, xs, ys, xe, ye;
         private static double xstart, ystart, xende, yende, xzoom, yzoom;
-        private static bool action, rectangle, finished, press, test;
+        private static bool action, rectangle=false, finished, press, test;
         private Cursor c1, c2;
         private static float xy;
 
@@ -148,6 +148,47 @@ namespace Fractal
 
 
         }
+
+        private void btn_save_Click(object sender, EventArgs e)
+        {
+            // Displays a SaveFileDialog so the user can save the Image
+            // assigned to btn_save.
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "JPeg Image|*.jpg|Bitmap Image|*.bmp|Gif Image|*.gif";
+            saveFileDialog1.Title = "Save an Image File";
+            saveFileDialog1.ShowDialog();
+
+            // If the file name is not an empty string open it for saving.
+            if (saveFileDialog1.FileName != "")
+            {
+                // Saves the Image via a FileStream created by the OpenFile method.
+                System.IO.FileStream fs =
+                   (System.IO.FileStream)saveFileDialog1.OpenFile();
+                // Saves the Image in the appropriate ImageFormat based upon the
+                // File type selected in the dialog box.
+                // NOTE that the FilterIndex property is one-based.
+                switch (saveFileDialog1.FilterIndex)
+                {
+                    case 1:
+                        this.pictureBox1.Image.Save(fs,
+                           System.Drawing.Imaging.ImageFormat.Jpeg);
+                        break;
+
+                    case 2:
+                        this.pictureBox1.Image.Save(fs,
+                           System.Drawing.Imaging.ImageFormat.Bmp);
+                        break;
+
+                    case 3:
+                        this.pictureBox1.Image.Save(fs,
+                           System.Drawing.Imaging.ImageFormat.Gif);
+                        break;
+                }
+
+                fs.Close();
+            }
+        }
+        
         public void init()
         {
             //HSBcol = new HSB();
@@ -199,35 +240,29 @@ namespace Fractal
         {
         }
 
-        public void paint(Graphics g)
-        {
-            update(g);
-        }
 
         public void update(Graphics g)
         {
-            if (test)
-            {
-
-                if (rectangle)
+          
+                using (g = Graphics.FromImage(pictureBox1.Image))
                 {
-
+                if (rectangle) {
+                    Pen p = new Pen(Color.Black);
                     if (xs < xe)
                     {
-                        Pen p = new Pen(Color.White);
+
                         if (ys < ye) g.DrawRectangle(p, xs, ys, (xe - xs), (ye - ys));
                         else g.DrawRectangle(p, xs, ye, (xe - xs), (ys - ye));
                     }
                     else
                     {
-                        Pen p = new Pen(Color.White);
+
                         if (ys < ye) g.DrawRectangle(p, xe, ys, (xs - xe), (ye - ys));
                         else g.DrawRectangle(p, xe, ye, (xs - xe), (ys - ye));
                     }
                 }
-
-                g.DrawImage(bitmap, 0, 0);
-            }
+                }
+            
         }
         private void mandelbrot() // calculate all points
         {
@@ -319,29 +354,65 @@ namespace Fractal
                 xstart = xende - (yende - ystart) * (double)xy;
         }
 
+
+        private void pictureBox1_MouseEnter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_MouseLeave(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (action)
+            {
+                
+                press = true;
+                xs = e.X;
+                ys = e.Y;
+            }
+            else
+            {
+                press = false;
+            }
+
+        }
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
             if (press)
             {
+
+
                 if (action)
                 {
-                    xe = e.X;
-                    ye = e.Y;
-                    rectangle = true;
-                    Invalidate();
+                    
+                        xe = e.X;
+                        ye = e.Y;
+                        rectangle = true;
+                        Invalidate();
+                    
                 }
                 press = false;
             }
 
         }
-
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
             int z, w;
+            rectangle = false;
             if (action)
             {
                 xe = e.X;
                 ye = e.Y;
+
                 if (xs > xe)
                 {
                     z = xs;
@@ -369,51 +440,19 @@ namespace Fractal
                 xzoom = (xende - xstart) / (double)x1;
                 yzoom = (yende - ystart) / (double)y1;
                 mandelbrot();
-                rectangle = false;
                 test = true;
                 Invalidate();
+
             }
 
         }
-
-        private void pictureBox1_MouseEnter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pictureBox1_MouseLeave(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
-        {
-
-        }
-
-        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
-        {
-
-            if (action)
-            {
-                press = true;
-                xs = e.X;
-                ys = e.Y;
-            }
-            else
-            {
-                press = false;
-            }
-
-        }
-
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
             g1 = g;
             if (test)
             {
-                update(g1);
+               update(g1);
             }
             else
             {
