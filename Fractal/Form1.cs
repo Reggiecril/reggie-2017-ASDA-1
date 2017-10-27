@@ -188,7 +188,14 @@ namespace Fractal
                 fs.Close();
             }
         }
-        
+
+       
+
+        private void btn_save_MouseMove(object sender, MouseEventArgs e)
+        {
+            this.Cursor = Cursors.Hand;
+        }
+
         public void init()
         {
             //HSBcol = new HSB();
@@ -196,7 +203,7 @@ namespace Fractal
             c1 = Cursors.WaitCursor;
             c2 = Cursors.Cross;
             x1 = this.Width - 16;
-            y1 = this.Height - 40;
+            y1 = this.Height - 72;
             pictureBox1.Width = x1;
             pictureBox1.Height = y1;
             bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height);
@@ -387,6 +394,7 @@ namespace Fractal
         }
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
+            this.Cursor = Cursors.Cross;
             if (press)
             {
 
