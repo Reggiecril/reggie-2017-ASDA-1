@@ -30,15 +30,19 @@
         {
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btn_save = new System.Windows.Forms.Button();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.SystemColors.Info;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 50);
+            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Cross;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(100, 50);
+            this.pictureBox1.Size = new System.Drawing.Size(600, 430);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
@@ -51,26 +55,39 @@
             // 
             // btn_save
             // 
-            this.btn_save.Location = new System.Drawing.Point(0, 0);
+            this.btn_save.Location = new System.Drawing.Point(612, 12);
             this.btn_save.Name = "btn_save";
-            this.btn_save.Size = new System.Drawing.Size(618, 50);
+            this.btn_save.Size = new System.Drawing.Size(154, 50);
             this.btn_save.TabIndex = 1;
             this.btn_save.Text = "Save";
             this.btn_save.UseVisualStyleBackColor = true;
             this.btn_save.Click += new System.EventHandler(this.btn_save_Click);
             this.btn_save.MouseMove += new System.Windows.Forms.MouseEventHandler(this.btn_save_MouseMove);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(612, 68);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(152, 39);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+
+            // 
             // Fractal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(618, 424);
+            this.ClientSize = new System.Drawing.Size(778, 429);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btn_save);
             this.Controls.Add(this.pictureBox1);
             this.Name = "Fractal";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -78,6 +95,8 @@
 
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button btn_save;
+        private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.Button button1;
     }
 }
 
