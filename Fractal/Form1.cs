@@ -132,13 +132,35 @@ namespace Fractal
         private double EY = 1.125;  // end value imaginary
         private static int x1, y1, xs, ys, xe, ye;
         private static double xstart, ystart, xende, yende, xzoom, yzoom;
-        private static bool  rectangle=false, finished, test;
+        private static bool  rectangle=false, finished, test,track_scoll=false;
         private Cursor c1, c2;
         private static float xy;
         private Color color2;
+        float h, b, alt = 0.0f,hue = 255,saturation = 0.8f * 255, brightness=255,bg=255;
 
-        float h, b, alt = 0.0f;
+        private void reset_Click(object sender, EventArgs e)
+        {
+            track_scoll = false;
+            hue = 255;
+            saturation = 0.8f * 255;
+            brightness = 255;
+            bg = 255;
+            start();
+            pictureBox1.Image = bitmap;
+        }
 
+        private void colorPicker_Scroll(object sender, EventArgs e)
+        {
+            track_scoll = true;
+            hue = trackBar1.Value;
+            saturation = trackBar2.Value;
+            brightness = trackBar3.Value;
+            bg = trackBar4.Value;
+
+
+            start();
+            pictureBox1.Image = bitmap;
+        }
 
         public Fractal()
         {
@@ -146,20 +168,9 @@ namespace Fractal
             init();
 
         }
-        //Choose Color
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (colorDialog1.ShowDialog() == DialogResult.OK)
-            {
-                color2 = colorDialog1.Color;
-                bitmap.SetPixel(70,44, color2);
-                mandelbrot();
-                pictureBox1.Invalidate();
-               
-                
-            }
-        }
-       
+
+
+        
         //Save image
         private void btn_save_Click(object sender, EventArgs e)
         {
@@ -245,11 +256,21 @@ namespace Fractal
 
             xzoom = (xende - xstart) / (double)x1;
             yzoom = (yende - ystart) / (double)y1;
-            mandelbrot();
+           
+                mandelbrot();
+            
+            
         }
 
         private void mandelbrot() // calculate all points
         {
+            if (!track_scoll)
+            {
+                trackBar1.Value = 255;
+                trackBar2.Value = 255;
+                trackBar3.Value = 255;
+                
+            }
             int x, y;
             test = true;
             this.Cursor = c1;
@@ -261,21 +282,21 @@ namespace Fractal
                     
                         if (h != alt)
                         {
-                            // brightnes
+                        // brightnes
 
-                            ///djm added
+                        ///djm added
 
-                            ///HSBcol.fromHSB(h,0.8f,b); 
+                        ///HSBcol.fromHSB(h,0.8f,b); 
 
-                            //convert hsb to rgb then make a Java Color
-                           
-                                b = 1.0f - h * h;
-                                float red =h * 255;
-                                float green =0.8f * 255;
-                                float blue =b * 255;
-
+                        //convert hsb to rgb then make a Java Color
                         
-                        color2 = HSBColor.FromHSB(new HSBColor(red, green, blue));
+                            b = 1.0f - h * h;
+                            if (!track_scoll)
+                            {
+                                hue = h * 255;
+                            }
+
+                            color2 = HSBColor.FromHSB(new HSBColor(hue,saturation,b*brightness));
 
                         ///g1.setColor(col);
                         //djm end
@@ -292,11 +313,20 @@ namespace Fractal
 
                         //djm 
                         alt = h;
-                                
-
-                            
 
 
+
+
+
+                        }
+                        else
+                        {
+                        b = 1.0f - h * h;
+                        if (!track_scoll)
+                        {
+                           bg = h * 255;
+                        }
+                        color2 = HSBColor.FromHSB(new HSBColor(bg, 0.8f * 255,b * 255));
                         }
                     bitmap.SetPixel(x, y, color2);
 
@@ -419,7 +449,10 @@ namespace Fractal
                 }
                 xzoom = (xende - xstart) / (double)x1;
                 yzoom = (yende - ystart) / (double)y1;
+           
+          
                 mandelbrot();
+           
                 test = true;
                 Invalidate();
 
