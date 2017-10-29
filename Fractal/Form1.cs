@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace Fractal
     public partial class Fractal : Form
     {
         Bitmap bitmap = new Bitmap(640,480);
-        Graphics g1;
+       
         public struct HSBColor
         {
             float h;
@@ -138,6 +139,13 @@ namespace Fractal
         private Color color2;
         float h, b, alt = 0.0f,hue = 255,saturation = 0.8f * 255, brightness=255,bg=255;
 
+        private void Fractal_Load(object sender, EventArgs e)
+        {
+            Timer t = new Timer();
+            t.Interval = 2000;
+            t.Tick += new EventHandler(t_Tick);
+        }
+
         private void reset_Click(object sender, EventArgs e)
         {
             track_scoll = false;
@@ -147,6 +155,7 @@ namespace Fractal
             bg = 255;
             start();
             pictureBox1.Image = bitmap;
+            t.Stop();
         }
 
         private void colorPicker_Scroll(object sender, EventArgs e)
@@ -157,6 +166,29 @@ namespace Fractal
             brightness = trackBar3.Value;
             bg = trackBar4.Value;
 
+
+            start();
+            pictureBox1.Image = bitmap;
+        }
+        private void colorCycle_Click(object sender, EventArgs e)
+        {
+            t.Interval = 1000;
+
+            t.Start();
+        }
+
+        private void t_Tick(object sender, EventArgs e)
+        {
+            track_scoll = true;
+            Random r = new Random();
+            hue = r.Next(50, 300);
+            saturation = r.Next(50, 205);
+            brightness = r.Next(50, 205);
+            bg = r.Next(50, 205);
+            trackBar1.Value = (int)hue;
+            trackBar2.Value = (int)saturation;
+            trackBar3.Value = (int)brightness;
+            trackBar4.Value = (int)bg;
 
             start();
             pictureBox1.Image = bitmap;
@@ -212,7 +244,7 @@ namespace Fractal
             }
         }
 
-        
+
 
         public void init()
         {
@@ -220,34 +252,13 @@ namespace Fractal
             finished = false;
             c1 = Cursors.WaitCursor;
             c2 = Cursors.Cross;
-            x1 = this.Width -150;
-            y1 = this.Height - 38;
-            pictureBox1.Width = x1;
-            pictureBox1.Height = y1;
+            x1 = pictureBox1.Width;
+            y1 = pictureBox1.Height;
+            
             bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             xy = (float)x1 / (float)y1;
             finished = true;
         }
-
-        
-
-        public void destroy() // delete all instances 
-        {
-            if (finished)
-            {
-                //removeMouseListener(this);
-                //removeMouseMotionListener(this);
-                //bitmap = null;
-
-                g1 = null;
-                c1 = null;
-                c2 = null;
-
-                //System.gc(); // garbage collection
-                GC.Collect();
-            }
-        }
-
 
         public void start()
         {
@@ -282,14 +293,6 @@ namespace Fractal
                     
                         if (h != alt)
                         {
-                        // brightnes
-
-                        ///djm added
-
-                        ///HSBcol.fromHSB(h,0.8f,b); 
-
-                        //convert hsb to rgb then make a Java Color
-                        
                             b = 1.0f - h * h;
                             if (!track_scoll)
                             {
@@ -297,36 +300,16 @@ namespace Fractal
                             }
 
                             color2 = HSBColor.FromHSB(new HSBColor(hue,saturation,b*brightness));
-
-                        ///g1.setColor(col);
-                        //djm end
-                        //djm added to convert to RGB from HSB
-
-                        //g1.setColor(Color.getHSBColor(h, 0.8f, b));
-                        //djm test
-
-                        //  Color col = Color.FromArgb(0, 0, 0, 0);
-
-                        //red = Color.Red;
-                        // green = Color.Green;
-                        // blue = Color.Blue;
-
-                        //djm 
-                        alt = h;
-
-
-
-
-
+                            alt = h;
                         }
                         else
                         {
-                        b = 1.0f - h * h;
-                        if (!track_scoll)
-                        {
-                           bg = h * 255;
-                        }
-                        color2 = HSBColor.FromHSB(new HSBColor(bg, 0.8f * 255,b * 255));
+                            b = 1.0f - h * h;
+                            if (!track_scoll)
+                            {
+                               bg= h * 255;
+                            }
+                            color2 = HSBColor.FromHSB(new HSBColor(bg, saturation, b * brightness));
                         }
                     bitmap.SetPixel(x, y, color2);
 
@@ -336,7 +319,7 @@ namespace Fractal
             pictureBox1.Image = bitmap;
             this.Cursor = c2;
         }
-
+        
         private float pointcolour(double xwert, double ywert)
         // color value from 0.0 to 1.0 by iterations
         {

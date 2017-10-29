@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Fractal));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btn_save = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
@@ -40,6 +42,8 @@
             this.trackBar4 = new System.Windows.Forms.TrackBar();
             this.label4 = new System.Windows.Forms.Label();
             this.reset = new System.Windows.Forms.Button();
+            this.colorCycle = new System.Windows.Forms.Button();
+            this.t = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
@@ -53,8 +57,7 @@
             this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Cross;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(600, 430);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.Size = new System.Drawing.Size(600, 425);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
@@ -67,9 +70,9 @@
             // 
             // btn_save
             // 
-            this.btn_save.Location = new System.Drawing.Point(611, 0);
+            this.btn_save.Location = new System.Drawing.Point(790, 12);
             this.btn_save.Name = "btn_save";
-            this.btn_save.Size = new System.Drawing.Size(167, 50);
+            this.btn_save.Size = new System.Drawing.Size(173, 120);
             this.btn_save.TabIndex = 1;
             this.btn_save.Text = "Save";
             this.btn_save.UseVisualStyleBackColor = true;
@@ -78,9 +81,10 @@
             // 
             // trackBar1
             // 
+            this.trackBar1.BackColor = System.Drawing.SystemColors.Control;
             this.trackBar1.Cursor = System.Windows.Forms.Cursors.SizeWE;
             this.trackBar1.LargeChange = 10;
-            this.trackBar1.Location = new System.Drawing.Point(593, 216);
+            this.trackBar1.Location = new System.Drawing.Point(606, 268);
             this.trackBar1.Maximum = 360;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(154, 69);
@@ -92,7 +96,7 @@
             // 
             this.trackBar2.Cursor = System.Windows.Forms.Cursors.SizeWE;
             this.trackBar2.LargeChange = 2;
-            this.trackBar2.Location = new System.Drawing.Point(593, 286);
+            this.trackBar2.Location = new System.Drawing.Point(606, 343);
             this.trackBar2.Maximum = 255;
             this.trackBar2.Name = "trackBar2";
             this.trackBar2.Size = new System.Drawing.Size(154, 69);
@@ -102,9 +106,10 @@
             // 
             // trackBar3
             // 
+            this.trackBar3.BackColor = System.Drawing.SystemColors.Control;
             this.trackBar3.Cursor = System.Windows.Forms.Cursors.SizeWE;
             this.trackBar3.LargeChange = 2;
-            this.trackBar3.Location = new System.Drawing.Point(593, 361);
+            this.trackBar3.Location = new System.Drawing.Point(790, 268);
             this.trackBar3.Maximum = 255;
             this.trackBar3.Name = "trackBar3";
             this.trackBar3.Size = new System.Drawing.Size(154, 69);
@@ -115,7 +120,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(749, 222);
+            this.label1.Location = new System.Drawing.Point(762, 274);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(17, 18);
             this.label1.TabIndex = 6;
@@ -124,7 +129,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(749, 292);
+            this.label2.Location = new System.Drawing.Point(762, 349);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(17, 18);
             this.label2.TabIndex = 7;
@@ -133,7 +138,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(749, 367);
+            this.label3.Location = new System.Drawing.Point(946, 274);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(17, 18);
             this.label3.TabIndex = 8;
@@ -143,7 +148,7 @@
             // 
             this.trackBar4.Cursor = System.Windows.Forms.Cursors.SizeWE;
             this.trackBar4.LargeChange = 10;
-            this.trackBar4.Location = new System.Drawing.Point(593, 141);
+            this.trackBar4.Location = new System.Drawing.Point(790, 343);
             this.trackBar4.Maximum = 255;
             this.trackBar4.Name = "trackBar4";
             this.trackBar4.Size = new System.Drawing.Size(154, 69);
@@ -154,7 +159,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(752, 146);
+            this.label4.Location = new System.Drawing.Point(949, 348);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(26, 18);
             this.label4.TabIndex = 10;
@@ -162,19 +167,37 @@
             // 
             // reset
             // 
-            this.reset.Location = new System.Drawing.Point(611, 56);
+            this.reset.Location = new System.Drawing.Point(606, 12);
             this.reset.Name = "reset";
-            this.reset.Size = new System.Drawing.Size(167, 48);
+            this.reset.Size = new System.Drawing.Size(173, 120);
             this.reset.TabIndex = 11;
             this.reset.Text = "Reset";
             this.reset.UseVisualStyleBackColor = true;
             this.reset.Click += new System.EventHandler(this.reset_Click);
             // 
+            // colorCycle
+            // 
+            this.colorCycle.BackColor = System.Drawing.Color.White;
+            this.colorCycle.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("colorCycle.BackgroundImage")));
+            this.colorCycle.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.colorCycle.Location = new System.Drawing.Point(606, 138);
+            this.colorCycle.Name = "colorCycle";
+            this.colorCycle.Size = new System.Drawing.Size(357, 130);
+            this.colorCycle.TabIndex = 12;
+            this.colorCycle.Text = "Color Cycle";
+            this.colorCycle.UseVisualStyleBackColor = false;
+            this.colorCycle.Click += new System.EventHandler(this.colorCycle_Click);
+            // 
+            // t
+            // 
+            this.t.Tick += new System.EventHandler(this.t_Tick);
+            // 
             // Fractal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(778, 429);
+            this.ClientSize = new System.Drawing.Size(969, 424);
+            this.Controls.Add(this.colorCycle);
             this.Controls.Add(this.reset);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.trackBar4);
@@ -188,6 +211,7 @@
             this.Controls.Add(this.pictureBox1);
             this.Name = "Fractal";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Fractal_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
@@ -212,6 +236,8 @@
         private System.Windows.Forms.TrackBar trackBar4;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button reset;
+        private System.Windows.Forms.Button colorCycle;
+        private System.Windows.Forms.Timer t;
     }
 }
 
