@@ -15,8 +15,8 @@ namespace Fractal
 {
     public partial class Fractal : Form
     {
-        Bitmap bitmap = new Bitmap(640,480);
-       
+        Bitmap bitmap = new Bitmap(640, 480);
+
         public struct HSBColor
         {
             float h;
@@ -135,11 +135,13 @@ namespace Fractal
         private double EY = 1.125;  // end value imaginary
         private static int x1, y1, xs, ys, xe, ye;
         private static double xstart, ystart, xende, yende, xzoom, yzoom;
-        private static bool  rectangle=false, finished, test,track_scoll=false;
+        private static bool rectangle = false, finished, test, track_scoll = false;
         private Cursor c1, c2;
         private static float xy;
         private Color color2;
-        float h, b, alt = 0.0f,hue = 255,saturation = 0.8f * 255, brightness=255,bg=255;
+        float h, b, alt = 0.0f, hue = 255, saturation = 0.8f * 255, brightness = 255, bg = 255;
+
+
 
         private void Fractal_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -159,6 +161,8 @@ namespace Fractal
             // Save settings
             Settings.Default.Save();
         }
+
+     
 
         private void Fractal_Load(object sender, EventArgs e)
         {
@@ -234,7 +238,7 @@ namespace Fractal
         }
 
 
-        
+
         //Save image
         private void btn_save_Click(object sender, EventArgs e)
         {
@@ -280,16 +284,13 @@ namespace Fractal
 
         public void init()
         {
-            //HSBcol = new HSB();
-            finished = false;
             c1 = Cursors.WaitCursor;
             c2 = Cursors.Cross;
             x1 = pictureBox1.Width;
             y1 = pictureBox1.Height;
-            
+
             bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             xy = (float)x1 / (float)y1;
-            finished = true;
         }
 
         public void start()
@@ -299,10 +300,10 @@ namespace Fractal
 
             xzoom = (xende - xstart) / (double)x1;
             yzoom = (yende - ystart) / (double)y1;
-           
-                mandelbrot();
-            
-            
+
+            mandelbrot();
+
+
         }
 
         private void mandelbrot() // calculate all points
@@ -312,37 +313,37 @@ namespace Fractal
                 trackBar1.Value = 255;
                 trackBar2.Value = 255;
                 trackBar3.Value = 255;
-                
+
             }
             int x, y;
             test = true;
             this.Cursor = c1;
-            for (x = 0; x < x1; x ++)
+            for (x = 0; x < x1; x++)
                 for (y = 0; y < y1; y++)
                 {
                     h = pointcolour(xstart + xzoom * (double)x, ystart + yzoom * (double)y);
                     // color value
-                    
-                        if (h != alt)
-                        {
-                            b = 1.0f - h * h;
-                            if (!track_scoll)
-                            {
-                                hue = h * 255;
-                            }
 
-                            color2 = HSBColor.FromHSB(new HSBColor(hue,saturation,b*brightness));
-                            alt = h;
-                        }
-                        else
+                    if (h != alt)
+                    {
+                        b = 1.0f - h * h;
+                        if (!track_scoll)
                         {
-                            b = 1.0f - h * h;
-                            if (!track_scoll)
-                            {
-                               bg= h * 255;
-                            }
-                            color2 = HSBColor.FromHSB(new HSBColor(bg, saturation, b * brightness));
+                            hue = h * 255;
                         }
+
+                        color2 = HSBColor.FromHSB(new HSBColor(hue, saturation, b * brightness));
+                        alt = h;
+                    }
+                    else
+                    {
+                        b = 1.0f - h * h;
+                        if (!track_scoll)
+                        {
+                            bg = h * 255;
+                        }
+                        color2 = HSBColor.FromHSB(new HSBColor(bg, saturation, b * brightness));
+                    }
                     bitmap.SetPixel(x, y, color2);
 
 
@@ -351,7 +352,7 @@ namespace Fractal
             pictureBox1.Image = bitmap;
             this.Cursor = c2;
         }
-        
+
         private float pointcolour(double xwert, double ywert)
         // color value from 0.0 to 1.0 by iterations
         {
@@ -367,6 +368,7 @@ namespace Fractal
             }
             return (float)j / (float)MAX;
         }
+
         private void initvalues() // reset start values
         {
             xstart = SX;
@@ -376,14 +378,14 @@ namespace Fractal
             if ((float)((xende - xstart) / (yende - ystart)) != xy)
                 xstart = xende - (yende - ystart) * (double)xy;
         }
-       
+
         //Save Button
         private void btn_save_MouseMove(object sender, MouseEventArgs e)
         {
             this.Cursor = Cursors.Hand;
         }
         //Color Choose
-        
+
         //Picture Box
         private void pictureBox1_MouseEnter(object sender, EventArgs e)
         {
@@ -395,26 +397,24 @@ namespace Fractal
 
         }
 
-        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
-        {
-
-        }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             rectangle = true;
-           
-                
-                xs = e.X;
-                ys = e.Y;
-            
+
+
+            xs = e.X;
+            ys = e.Y;
+
 
         }
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
             this.Cursor = Cursors.Cross;
+            
             if (rectangle)
             {
+
                 xe = e.X;
                 ye = e.Y;
 
@@ -425,33 +425,44 @@ namespace Fractal
                 {
                     gr.DrawRectangle(Pens.White,
                         Math.Min(xs, xe), Math.Min(ys, xe),
-                        Math.Abs(xe-xs), Math.Abs(ye-ys));
+                        Math.Abs(xe - xs), Math.Abs(ye - ys));
                 }
                 pictureBox1.Image = bm;
+
             }
+
         }
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
-            rectangle = false;
-               
-                int z, w;
-                xe = e.X;
-                ye = e.Y;
 
-                if (xs > xe)
-                {
-                    z = xs;
-                    xs = xe;
-                    xe = z;
-                }
-                if (ys > ye)
-                {
-                    z = ys;
-                    ys = ye;
-                    ye = z;
-                }
-                w = (xe - xs);
-                z = (ye - ys);
+            rectangle = false;
+            int z, w;
+            xe = e.X;
+            ye = e.Y;
+
+            if (xs > xe)
+            {
+                z = xs;
+                xs = xe;
+                xe = z;
+            }
+            if (ys > ye)
+            {
+                z = ys;
+                ys = ye;
+                ye = z;
+            }
+            w = (xe - xs);
+            z = (ye - ys);
+            if (w == 0 && z == 0)
+            {
+                mandelbrot();
+                test = true;
+                Invalidate();
+
+            }
+            else
+            {
                 if ((w < 2) && (z < 2)) initvalues();
                 else
                 {
@@ -464,16 +475,44 @@ namespace Fractal
                 }
                 xzoom = (xende - xstart) / (double)x1;
                 yzoom = (yende - ystart) / (double)y1;
-           
-          
                 mandelbrot();
-           
                 test = true;
                 Invalidate();
-
-            
-
+            }
+         
         }
+
+        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+           if(e.Button == MouseButtons.Right)
+            {
+                track_scoll = false;
+                hue = 255;
+                saturation = 0.8f * 255;
+                brightness = 255;
+                bg = 255;
+                start();
+                pictureBox1.Image = bitmap;
+
+            }
+           
+        }
+
+        private void pictureBox1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                track_scoll = false;
+                hue = 255;
+                saturation = 0.8f * 255;
+                brightness = 255;
+                bg = 255;
+                start();
+                pictureBox1.Image = bitmap;
+
+            }
+        }
+
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
