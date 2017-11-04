@@ -139,182 +139,17 @@ namespace Fractal
         private Cursor c1, c2;
         private static float xy;
         private Color color2;
-        float h, b, alt = 0.0f, hue = 255, saturation = 0.8f * 255, brightness = 255, bg = 255;
-
-
-
-        private void Fractal_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Settings.Default.track_scoll = this.track_scoll;
-
-            Settings.Default.hue = this.hue;
-            Settings.Default.saturation = this.saturation;
-            Settings.Default.brightness = this.brightness;
-            Settings.Default.bg = this.bg;
-
-            Settings.Default.xzoom = this.xzoom;
-            Settings.Default.yzoom = this.yzoom;
-            Settings.Default.xstart = this.xstart;
-            Settings.Default.ystart = this.ystart;
-
-
-
-
-            // Copy window location to app settings
-            Settings.Default.WindowLocation = this.Location;
-
-            // Copy window size to app settings
-            if (this.WindowState == FormWindowState.Normal)
-            {
-                Settings.Default.WindowSize = this.Size;
-            }
-            else
-            {
-                Settings.Default.WindowSize = this.RestoreBounds.Size;
-            }
-
-            // Save settings
-            Settings.Default.Save();
-        }
-
-     
-
-        private void Fractal_Load(object sender, EventArgs e)
-        {
-            this.track_scoll = Settings.Default.track_scoll;
-            //loading saved color value.
-            this.hue = Settings.Default.hue;
-            this.saturation = Settings.Default.saturation;
-            this.brightness = Settings.Default.brightness;
-            this.bg = Settings.Default.bg;
-            //put value from saved color to trackbar.
-            trackBar1.Value = (int)hue ;
-            trackBar2.Value = (int)saturation;
-            trackBar3.Value = (int)brightness;
-            trackBar4.Value = (int)bg;
-            //loading saved zoom.
-            this.xzoom = Settings.Default.xzoom;
-            this.yzoom = Settings.Default.yzoom;
-            this.xstart= Settings.Default.xstart;
-            this.ystart = Settings.Default.ystart;
-
-
-
-            start1();
-            pictureBox1.Image = bitmap;
-            // Set window location
-            if (Settings.Default.WindowLocation != null)
-            {
-                this.Location = Settings.Default.WindowLocation;
-            }
-
-            // Set window size
-            if (Settings.Default.WindowSize != null)
-            {
-                this.Size = Settings.Default.WindowSize;
-            }
-            Timer t = new Timer();
-            t.Interval = 2000;
-            t.Tick += new EventHandler(t_Tick);
-        }
-
-        private void reset_Click(object sender, EventArgs e)
-        {
-            track_scoll = false;
-            hue = 255;
-            saturation = 0.8f * 255;
-            brightness = 255;
-            bg = 255;
-            start();
-            t.Stop();
-        }
-
-        private void colorPicker_Scroll(object sender, EventArgs e)
-        {
-            track_scoll = true;
-            hue = trackBar1.Value;
-            saturation = trackBar2.Value;
-            brightness = trackBar3.Value;
-            bg = trackBar4.Value;
-
-
-            start();
-        }
-        private void colorCycle_Click(object sender, EventArgs e)
-        {
-            t.Interval = 1000;
-
-            t.Start();
-        }
-
-        private void t_Tick(object sender, EventArgs e)
-        {
-            track_scoll = true;
-            Random r = new Random();
-            hue = r.Next(50, 300);
-            saturation = r.Next(50, 205);
-            brightness = r.Next(50, 205);
-            bg = r.Next(50, 205);
-            trackBar1.Value = (int)hue;
-            trackBar2.Value = (int)saturation;
-            trackBar3.Value = (int)brightness;
-            trackBar4.Value = (int)bg;
-
-            start();
-        }
-
+        private float h, b, alt = 0.0f, hue = 255, saturation = 0.8f * 255, brightness = 255, bg = 255;
+        
         public Fractal()
         {
             InitializeComponent();
             init();
 
         }
-
-
-
-        //Save image
-        private void btn_save_Click(object sender, EventArgs e)
-        {
-            // Displays a SaveFileDialog so the user can save the Image
-            // assigned to btn_save.
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.Filter = "JPeg Image|*.jpg|Bitmap Image|*.bmp|Gif Image|*.gif";
-            saveFileDialog1.Title = "Save an Image File";
-            saveFileDialog1.ShowDialog();
-
-            // If the file name is not an empty string open it for saving.
-            if (saveFileDialog1.FileName != "")
-            {
-                // Saves the Image via a FileStream created by the OpenFile method.
-                System.IO.FileStream fs =
-                   (System.IO.FileStream)saveFileDialog1.OpenFile();
-                // Saves the Image in the appropriate ImageFormat based upon the
-                // File type selected in the dialog box.
-                // NOTE that the FilterIndex property is one-based.
-                switch (saveFileDialog1.FilterIndex)
-                {
-                    case 1:
-                        this.pictureBox1.Image.Save(fs,
-                           System.Drawing.Imaging.ImageFormat.Jpeg);
-                        break;
-
-                    case 2:
-                        this.pictureBox1.Image.Save(fs,
-                           System.Drawing.Imaging.ImageFormat.Bmp);
-                        break;
-
-                    case 3:
-                        this.pictureBox1.Image.Save(fs,
-                           System.Drawing.Imaging.ImageFormat.Gif);
-                        break;
-                }
-
-                fs.Close();
-            }
-        }
-
-
-
+        /*
+            ////////////Method
+        */
         public void init()
         {
             c1 = Cursors.WaitCursor;
@@ -328,25 +163,12 @@ namespace Fractal
 
         public void start()
         {
-
             initvalues();
-
             xzoom = (xende - xstart) / (double)x1;
             yzoom = (yende - ystart) / (double)y1;
-
             mandelbrot();
-
-
         }
 
-        public void start1()
-        {
-            
-
-            mandelbrot();
-
-
-        }
 
         private void mandelbrot() // calculate all points
         {
@@ -395,7 +217,6 @@ namespace Fractal
         }
 
         private float pointcolour(double xwert, double ywert)
-        // color value from 0.0 to 1.0 by iterations
         {
             double r = 0.0, i = 0.0, m = 0.0;
             int j = 0;
@@ -410,7 +231,8 @@ namespace Fractal
             return (float)j / (float)MAX;
         }
 
-        private void initvalues() // reset start values
+        private void initvalues() 
+        // reset start values
         {
             xstart = SX;
             ystart = SY;
@@ -420,10 +242,171 @@ namespace Fractal
                 xstart = xende - (yende - ystart) * (double)xy;
         }
 
-        //Save Button
-        private void btn_save_MouseMove(object sender, MouseEventArgs e)
+
+        /* 
+               /////////Event 
+        */
+
+        //Form
+        private void Fractal_FormClosing(object sender, FormClosingEventArgs e)
         {
-            this.Cursor = Cursors.Hand;
+            //set default bool color.
+            Settings.Default.track_scoll = this.track_scoll;
+            //set default color value
+            Settings.Default.hue = this.hue;
+            Settings.Default.saturation = this.saturation;
+            Settings.Default.brightness = this.brightness;
+            Settings.Default.bg = this.bg;
+            //set default zoom value 
+            Settings.Default.xzoom = this.xzoom;
+            Settings.Default.yzoom = this.yzoom;
+            Settings.Default.xstart = this.xstart;
+            Settings.Default.ystart = this.ystart;
+
+            // Copy window location to app settings
+            Settings.Default.WindowLocation = this.Location;
+
+            // Copy window size to app settings
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                Settings.Default.WindowSize = this.Size;
+            }
+            else
+            {
+                Settings.Default.WindowSize = this.RestoreBounds.Size;
+            }
+
+            // Save settings
+            Settings.Default.Save();
+        }
+
+        private void Fractal_Load(object sender, EventArgs e)
+        {
+            //loading saved track_scoll value.
+            this.track_scoll = Settings.Default.track_scoll;
+            //loading saved color value.
+            this.hue = Settings.Default.hue;
+            this.saturation = Settings.Default.saturation;
+            this.brightness = Settings.Default.brightness;
+            this.bg = Settings.Default.bg;
+            //put value from saved color to trackbar.
+            trackBar1.Value = (int)hue;
+            trackBar2.Value = (int)saturation;
+            trackBar3.Value = (int)brightness;
+            trackBar4.Value = (int)bg;
+            //loading saved zoom.
+            this.xzoom = Settings.Default.xzoom;
+            this.yzoom = Settings.Default.yzoom;
+            this.xstart = Settings.Default.xstart;
+            this.ystart = Settings.Default.ystart;
+
+            mandelbrot();
+            pictureBox1.Image = bitmap;
+            // Set window location
+            if (Settings.Default.WindowLocation != null)
+            {
+                this.Location = Settings.Default.WindowLocation;
+            }
+
+            // Set window size
+            if (Settings.Default.WindowSize != null)
+            {
+                this.Size = Settings.Default.WindowSize;
+            }
+        }
+
+        //reset button
+        private void reset_Click(object sender, EventArgs e)
+        {
+            track_scoll = false;
+            hue = 255;
+            saturation = 0.8f * 255;
+            brightness = 255;
+            bg = 255;
+            start();
+            t.Stop();
+        }
+
+        //track bar 
+        private void colorPicker_Scroll(object sender, EventArgs e)
+        {
+            track_scoll = true;
+            hue = trackBar1.Value;
+            saturation = trackBar2.Value;
+            brightness = trackBar3.Value;
+            bg = trackBar4.Value;
+            
+            start();
+        }
+
+
+        //Save Button
+        private void btn_save_Click(object sender, EventArgs e)//Save image
+        {
+            // Displays a SaveFileDialog so the user can save the Image
+            // assigned to btn_save.
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "JPeg Image|*.jpg|Bitmap Image|*.bmp|Gif Image|*.gif";
+            saveFileDialog1.Title = "Save an Image File";
+            saveFileDialog1.ShowDialog();
+
+            // If the file name is not an empty string open it for saving.
+            if (saveFileDialog1.FileName != "")
+            {
+                // Saves the Image via a FileStream created by the OpenFile method.
+                System.IO.FileStream fs =
+                   (System.IO.FileStream)saveFileDialog1.OpenFile();
+                // Saves the Image in the appropriate ImageFormat based upon the
+                // File type selected in the dialog box.
+                // NOTE that the FilterIndex property is one-based.
+                switch (saveFileDialog1.FilterIndex)
+                {
+                    case 1:
+                        //save bitmap as style JPEG
+                        this.pictureBox1.Image.Save(fs,
+                           System.Drawing.Imaging.ImageFormat.Jpeg);
+                        break;
+
+                    case 2:
+                        //save bitmap as style bmp
+                        this.pictureBox1.Image.Save(fs,
+                           System.Drawing.Imaging.ImageFormat.Bmp);
+                        break;
+
+                    case 3:
+                        //save bitmap as style gif
+                        this.pictureBox1.Image.Save(fs,
+                           System.Drawing.Imaging.ImageFormat.Gif);
+                        break;
+                }
+
+                fs.Close();
+            }
+        }
+
+        //color cycling
+        private void colorCycle_Click(object sender, EventArgs e)
+        {
+            //time is 1s;
+            t.Interval = 1000;
+            t.Start();
+        }
+
+        //change color by timer and random value.
+        private void t_Tick(object sender, EventArgs e)
+        {
+            track_scoll = true;
+            Random r = new Random();
+            hue = r.Next(50, 300);
+            saturation = r.Next(50, 205);
+            brightness = r.Next(50, 205);
+            bg = r.Next(50, 205);
+            trackBar1.Value = (int)hue;
+            trackBar2.Value = (int)saturation;
+            trackBar3.Value = (int)brightness;
+            trackBar4.Value = (int)bg;
+
+            start();
         }
 
         //Picture Box
@@ -440,12 +423,8 @@ namespace Fractal
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             rectangle = true;
-
-
             xs = e.X;
             ys = e.Y;
-
-
         }
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
@@ -453,7 +432,6 @@ namespace Fractal
             
             if (rectangle)
             {
-
                 xe = e.X;
                 ye = e.Y;
 
@@ -467,7 +445,6 @@ namespace Fractal
                         Math.Abs(xe - xs), Math.Abs(ye - ys));
                 }
                 pictureBox1.Image = bm;
-
             }
 
         }
