@@ -133,9 +133,9 @@ namespace Fractal
         private double SY = -1.125; // start value imaginary
         private double EX = 0.6;    // end value real
         private double EY = 1.125;  // end value imaginary
-        private static int x1, y1, xs, ys, xe, ye;
-        private static double xstart, ystart, xende, yende, xzoom, yzoom;
-        private static bool rectangle = false, finished, test, track_scoll = false;
+        private int x1, y1, xs, ys, xe, ye;
+        private double xstart, ystart, xende, yende, xzoom, yzoom;
+        private bool rectangle = false, track_scoll = false;
         private Cursor c1, c2;
         private static float xy;
         private Color color2;
@@ -145,6 +145,21 @@ namespace Fractal
 
         private void Fractal_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Settings.Default.track_scoll = this.track_scoll;
+
+            Settings.Default.hue = this.hue;
+            Settings.Default.saturation = this.saturation;
+            Settings.Default.brightness = this.brightness;
+            Settings.Default.bg = this.bg;
+
+            Settings.Default.xzoom = this.xzoom;
+            Settings.Default.yzoom = this.yzoom;
+            Settings.Default.xstart = this.xstart;
+            Settings.Default.ystart = this.ystart;
+
+
+
+
             // Copy window location to app settings
             Settings.Default.WindowLocation = this.Location;
 
@@ -166,6 +181,27 @@ namespace Fractal
 
         private void Fractal_Load(object sender, EventArgs e)
         {
+            this.track_scoll = Settings.Default.track_scoll;
+            //loading saved color value.
+            this.hue = Settings.Default.hue;
+            this.saturation = Settings.Default.saturation;
+            this.brightness = Settings.Default.brightness;
+            this.bg = Settings.Default.bg;
+            //put value from saved color to trackbar.
+            trackBar1.Value = (int)hue ;
+            trackBar2.Value = (int)saturation;
+            trackBar3.Value = (int)brightness;
+            trackBar4.Value = (int)bg;
+            //loading saved zoom.
+            this.xzoom = Settings.Default.xzoom;
+            this.yzoom = Settings.Default.yzoom;
+            this.xstart= Settings.Default.xstart;
+            this.ystart = Settings.Default.ystart;
+
+
+
+            start1();
+            pictureBox1.Image = bitmap;
             // Set window location
             if (Settings.Default.WindowLocation != null)
             {
@@ -190,7 +226,6 @@ namespace Fractal
             brightness = 255;
             bg = 255;
             start();
-            pictureBox1.Image = bitmap;
             t.Stop();
         }
 
@@ -204,7 +239,6 @@ namespace Fractal
 
 
             start();
-            pictureBox1.Image = bitmap;
         }
         private void colorCycle_Click(object sender, EventArgs e)
         {
@@ -227,7 +261,6 @@ namespace Fractal
             trackBar4.Value = (int)bg;
 
             start();
-            pictureBox1.Image = bitmap;
         }
 
         public Fractal()
@@ -306,6 +339,15 @@ namespace Fractal
 
         }
 
+        public void start1()
+        {
+            
+
+            mandelbrot();
+
+
+        }
+
         private void mandelbrot() // calculate all points
         {
             if (!track_scoll)
@@ -316,7 +358,6 @@ namespace Fractal
 
             }
             int x, y;
-            test = true;
             this.Cursor = c1;
             for (x = 0; x < x1; x++)
                 for (y = 0; y < y1; y++)
@@ -384,7 +425,6 @@ namespace Fractal
         {
             this.Cursor = Cursors.Hand;
         }
-        //Color Choose
 
         //Picture Box
         private void pictureBox1_MouseEnter(object sender, EventArgs e)
@@ -396,7 +436,6 @@ namespace Fractal
         {
 
         }
-
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
@@ -434,8 +473,9 @@ namespace Fractal
         }
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
-
+            //rectangle drawing stopped.
             rectangle = false;
+
             int z, w;
             xe = e.X;
             ye = e.Y;
@@ -454,11 +494,10 @@ namespace Fractal
             }
             w = (xe - xs);
             z = (ye - ys);
+            //when mouse click, bitmap repaint.
             if (w == 0 && z == 0)
             {
                 mandelbrot();
-                test = true;
-                Invalidate();
 
             }
             else
@@ -476,23 +515,18 @@ namespace Fractal
                 xzoom = (xende - xstart) / (double)x1;
                 yzoom = (yende - ystart) / (double)y1;
                 mandelbrot();
-                test = true;
-                Invalidate();
             }
          
         }
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
+            //set right click 
            if(e.Button == MouseButtons.Right)
             {
-                track_scoll = false;
-                hue = 255;
-                saturation = 0.8f * 255;
-                brightness = 255;
-                bg = 255;
+                //reset bitmap
+               
                 start();
-                pictureBox1.Image = bitmap;
 
             }
            
@@ -500,32 +534,15 @@ namespace Fractal
 
         private void pictureBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            //set left doubleclick
             if (e.Button == MouseButtons.Left)
             {
-                track_scoll = false;
-                hue = 255;
-                saturation = 0.8f * 255;
-                brightness = 255;
-                bg = 255;
+                
                 start();
-                pictureBox1.Image = bitmap;
 
             }
         }
 
-        private void pictureBox1_Paint(object sender, PaintEventArgs e)
-        {
-            Graphics g = e.Graphics;
-        
-            if (!test)
-            {
-           
-                start();
 
-            }
-            
-
-
-        }
     }
 }
